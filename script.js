@@ -1,26 +1,29 @@
 import { initStorage, getPages , setPage} from "./storage.js";
 
+function createTextDiv(text) {
+    const divNode = document.createElement("div");
+    const textNode = document.createTextNode(text);
+    divNode.appendChild(textNode);
+
+    return divNode;
+}
+
+// Improvement: Show only the allowed action - one of Blocked or Unblocked.
+// Improvement: Add a delete action
 function addCellActions(cell, url) {
-    const newDiv = document.createElement("div");
-    const blockText = document.createTextNode("block");
-    newDiv.appendChild(blockText);
-    newDiv.onclick=async() => {
+    const blockDiv = createTextDiv("Block");
+    blockDiv.onclick=async() => {
         await setPage(url, true);
         loadTable();
     }
-    cell.appendChild(newDiv);
+    cell.appendChild(blockDiv);
 
-    // Code for unblock text button.`
-    // -----------------
-    const unBlockDiv = document.createElement("div");
-    const unBlockText = document.createTextNode("unblock");
-    unBlockDiv.appendChild(unBlockText);
-    unBlockDiv.onclick=async() => {
+    const unblockDiv = createTextDiv("Unblock");
+    unblockDiv.onclick=async() => {
         await setPage(url, false);
         loadTable();
     }
-
-    cell.appendChild(unBlockDiv);
+    cell.appendChild(unblockDiv);
 }
 
 function addTableRow(table, url, blockedStatus) {
@@ -36,38 +39,34 @@ function addTableRow(table, url, blockedStatus) {
     addCellActions(actionCell, url);
 }
 
+// Improvement: add entry only if exists
 async function addEntry() {
     let newUrl = document.getElementById("newUrlPattern").value;
 
     await setPage(newUrl);
-    console.log(await getPages());
  
     await loadTable();
 }
 
 function clearTableBody(table) {
-    let len = table.tBodies.length;
+    let len = table.rows.length;
     for (var i=0; i<len; i++) {
         table.deleteRow(-1);
     }
 }
 
 async function loadTable() {
-    let table = document.getElementById("summary_table");
+    let table = document.getElementById("summary_table").getElementsByTagName('tbody')[0];
 
     clearTableBody(table);
 
     const data = await getPages();
     for (const [key, value] of Object.entries(data)) {
-        console.log("Drawing", key, value);
-
         addTableRow(table, key, value);
     }
 }
 
-await initStorage();
 await loadTable();
-console.log("hello");
 document.getElementById("add_button").onclick=async() => {
     await addEntry();
 };

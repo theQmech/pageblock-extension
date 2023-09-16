@@ -11,19 +11,10 @@
     "permissions": [
         "storage",
         "tabs",
-        "scripting",
         "activeTab"
     ],
     "background": {
         "type": "module",
         "service_worker": "service_worker.js"
-    },
-    "content_scripts": [
-        {
-            "matches": ["https://*/*", "http://*/*"],
-            "js": ["background.js", "storage.js"],
-            "run_at": "document_start",
-            "type": "module"
-        }
-    ]
+    }
 }

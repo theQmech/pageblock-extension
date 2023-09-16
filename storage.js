@@ -1,6 +1,5 @@
 async function initStorage() {
     await chrome.storage.local.clear();
-    // await chrome.storage.local.set({"pages": {}});
 }
 
 async function getPages() {

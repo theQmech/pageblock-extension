@@ -1,18 +1,13 @@
 import { getPages } from "./storage.js";
 
-setInterval(async function() {
-    let data = await getPages();
-    console.log(data);    
-}, 5000);
-
 chrome.tabs.onUpdated.addListener(async function (tabId, changeInfo, tab) {
-    if (changeInfo.status == "complete") {
-        chrome.scripting.executeScript({
-            target : {tabId : tabId},
-            files : [ "block_page.js" ],
-        }).then(() => console.log("script injected"));
+    const currentUrl = tab.url;
+    const data = await getPages();
 
-        console.log("pageComplete", tabId, changeInfo, tab)
-
+    for (const [urlPattern, blocked] of Object.entries(data)) {   
+        if (blocked && currentUrl.includes(urlPattern)) {
+            console.log("Blocking [" + currentUrl + "]. Matched [" + urlPattern + "]");
+            chrome.tabs.update(tabId, {url:"https://onetinyhand.com/"});
+        }
     }
-});
+  });

@@ -1,4 +1,4 @@
-import { initStorage, getPages , setPage} from "./storage.js";
+import { initStorage, getPages, setPage } from "./storage.js";
 
 function createTextDiv(text) {
     const divNode = document.createElement("div");
@@ -12,14 +12,14 @@ function createTextDiv(text) {
 // Improvement: Add a delete action
 function addCellActions(cell, url) {
     const blockDiv = createTextDiv("Block");
-    blockDiv.onclick=async() => {
+    blockDiv.onclick = async () => {
         await setPage(url, true);
         loadTable();
     }
     cell.appendChild(blockDiv);
 
     const unblockDiv = createTextDiv("Unblock");
-    unblockDiv.onclick=async() => {
+    unblockDiv.onclick = async () => {
         await setPage(url, false);
         loadTable();
     }
@@ -31,10 +31,10 @@ function addTableRow(table, url, blockedStatus) {
 
     var urlCell = row.insertCell(0);
     var statusCell = row.insertCell(1);
-    
+
     urlCell.innerHTML = url;
     statusCell.innerHTML = (blockedStatus ? "Yes" : "No");
-    
+
     var actionCell = row.insertCell(2);
     addCellActions(actionCell, url);
 }
@@ -44,13 +44,13 @@ async function addEntry() {
     let newUrl = document.getElementById("newUrlPattern").value;
 
     await setPage(newUrl);
- 
+
     await loadTable();
 }
 
 function clearTableBody(table) {
     let len = table.rows.length;
-    for (var i=0; i<len; i++) {
+    for (var i = 0; i < len; i++) {
         table.deleteRow(-1);
     }
 }
@@ -67,7 +67,7 @@ async function loadTable() {
 }
 
 await loadTable();
-document.getElementById("add_button").onclick=async() => {
+document.getElementById("add_button").onclick = async () => {
     await addEntry();
 };
 

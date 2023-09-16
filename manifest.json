@@ -1,0 +1,29 @@
+{
+    "name": "Page Blocker",
+    "version": "1.0.0",
+    "description": "Block pages that distract you",
+    "manifest_version": 3,
+    "author": "Rupanshu Ganvir",
+    "action":{
+        "default_popup": "index.html",
+        "default_title": "Blocked sites"
+    },
+    "permissions": [
+        "storage",
+        "tabs",
+        "scripting",
+        "activeTab"
+    ],
+    "background": {
+        "type": "module",
+        "service_worker": "service_worker.js"
+    },
+    "content_scripts": [
+        {
+            "matches": ["https://*/*", "http://*/*"],
+            "js": ["background.js", "storage.js"],
+            "run_at": "document_start",
+            "type": "module"
+        }
+    ]
+}

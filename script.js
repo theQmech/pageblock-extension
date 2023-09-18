@@ -14,6 +14,9 @@ function addCellActions(cell, url, blockedStatus) {
     const buttonText = blockedStatus ? "Unblock" : "Block";
     const onclick = blockedStatus ? 
         (async () => {
+            alert("Are you sure?");
+            alert("Are you absolutely sure?");
+            alert("Are you conscious about indulging this distraction?")
             await setPage(url, false);
             await loadTable();
         }) :

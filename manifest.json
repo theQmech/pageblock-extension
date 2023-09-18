@@ -4,7 +4,7 @@
     "description": "Block pages that distract you",
     "manifest_version": 3,
     "author": "Rupanshu Ganvir",
-    "action":{
+    "action": {
         "default_popup": "index.html",
         "default_title": "Blocked sites"
     },

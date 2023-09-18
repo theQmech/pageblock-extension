@@ -1,29 +1,29 @@
 import { initStorage, getPages, setPage } from "./storage.js";
 
-function createTextDiv(text) {
-    const divNode = document.createElement("div");
+function createButtonDiv(text, onClickCallback) {
+    const divNode = document.createElement("button");
     const textNode = document.createTextNode(text);
     divNode.appendChild(textNode);
+    divNode.onclick = onClickCallback;
 
     return divNode;
 }
 
-// Improvement: Show only the allowed action - one of Blocked or Unblocked.
 // Improvement: Add a delete action
-function addCellActions(cell, url) {
-    const blockDiv = createTextDiv("Block");
-    blockDiv.onclick = async () => {
-        await setPage(url, true);
-        loadTable();
-    }
-    cell.appendChild(blockDiv);
-
-    const unblockDiv = createTextDiv("Unblock");
-    unblockDiv.onclick = async () => {
-        await setPage(url, false);
-        loadTable();
-    }
-    cell.appendChild(unblockDiv);
+function addCellActions(cell, url, blockedStatus) {
+    const buttonText = blockedStatus ? "Unblock" : "Block";
+    const onclick = blockedStatus ? 
+        (async () => {
+            await setPage(url, false);
+            await loadTable();
+        }) :
+        (async () => {
+            await setPage(url, true);
+            await loadTable();
+        });
+    
+    const buttonDiv = createButtonDiv(buttonText, onclick);
+    cell.appendChild(buttonDiv);
 }
 
 function addTableRow(table, url, blockedStatus) {
@@ -36,10 +36,10 @@ function addTableRow(table, url, blockedStatus) {
     statusCell.innerHTML = (blockedStatus ? "Yes" : "No");
 
     var actionCell = row.insertCell(2);
-    addCellActions(actionCell, url);
+    addCellActions(actionCell, url, blockedStatus);
 }
 
-// Improvement: add entry only if exists
+// Improvement: add entry only if does not exists
 async function addEntry() {
     let newUrl = document.getElementById("newUrlPattern").value;
 

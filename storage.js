@@ -12,4 +12,8 @@ async function setPage(url, blocked = false) {
     await chrome.storage.local.set(data);
 }
 
-export { initStorage, getPages, setPage };
+async function removePage(url) {
+    await chrome.storage.local.remove(url);
+}
+
+export { initStorage, getPages, setPage, removePage };

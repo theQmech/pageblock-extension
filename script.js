@@ -1,4 +1,4 @@
-import { initStorage, getPages, setPage } from "./storage.js";
+import { getPages, setPage, removePage } from "./storage.js";
 
 function createButtonDiv(text, onClickCallback) {
     const divNode = document.createElement("button");
@@ -9,8 +9,7 @@ function createButtonDiv(text, onClickCallback) {
     return divNode;
 }
 
-// Improvement: Add a delete action
-function addCellActions(cell, url, blockedStatus) {
+function createBlockToggleButton(url, blockedStatus) {
     const buttonText = blockedStatus ? "Unblock" : "Block";
     const onclick = blockedStatus ? 
         (async () => {
@@ -26,7 +25,18 @@ function addCellActions(cell, url, blockedStatus) {
         });
     
     const buttonDiv = createButtonDiv(buttonText, onclick);
-    cell.appendChild(buttonDiv);
+    return buttonDiv;
+}
+
+function addCellActions(cell, url, blockedStatus) {
+    const blockToggleButton = createBlockToggleButton(url, blockedStatus);
+    const removeButton = createButtonDiv("Remove", async () => {
+        await removePage(url);
+        await loadTable();
+    });
+
+    cell.appendChild(blockToggleButton);
+    cell.appendChild(removeButton);
 }
 
 function addTableRow(table, url, blockedStatus) {

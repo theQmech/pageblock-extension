@@ -69,9 +69,12 @@ function addTableRow(table, url, blockedStatus) {
 // Improvement: add entry only if does not exists
 async function addEntry() {
     let newUrl = document.getElementById("newUrlPattern").value;
+    if (!newUrl) {
+        alert("Provided URL is empty!");
+        return;
+    }
 
     await setPage(newUrl);
-
     await loadTable();
 }
 
@@ -94,6 +97,10 @@ async function loadTable() {
 }
 
 await loadTable();
+getActiveTabUrl().then(result => {
+    let domain = (new URL(result)).hostname.replace('www.','');
+    document.getElementById("newUrlPattern").value = domain;
+});
 document.getElementById("add_button").onclick = async () => {
     await addEntry();
 };

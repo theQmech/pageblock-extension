@@ -1,5 +1,13 @@
 import { getPages, setPage, removePage } from "./storage.js";
 
+function getActiveTabUrl() {
+    return chrome.tabs.query({ active: true, currentWindow: true }
+    ).then(tabs => {
+        var resultUrl = tabs[0].url;
+        return resultUrl;
+    });
+}
+
 function createButtonDiv(text, onClickCallback) {
     const divNode = document.createElement("button");
     const textNode = document.createTextNode(text);
@@ -11,11 +19,11 @@ function createButtonDiv(text, onClickCallback) {
 
 function createBlockToggleButton(url, blockedStatus) {
     const buttonText = blockedStatus ? "Unblock" : "Block";
-    const onclick = blockedStatus ? 
+    const onclick = blockedStatus ?
         (async () => {
             alert("Are you sure?");
             alert("Are you absolutely sure?");
-            alert("Are you conscious about indulging this distraction?")
+            alert("Have you thought through the consequences?")
             await setPage(url, false);
             await loadTable();
         }) :
@@ -23,7 +31,7 @@ function createBlockToggleButton(url, blockedStatus) {
             await setPage(url, true);
             await loadTable();
         });
-    
+
     const buttonDiv = createButtonDiv(buttonText, onclick);
     return buttonDiv;
 }
@@ -41,6 +49,12 @@ function addCellActions(cell, url, blockedStatus) {
 
 function addTableRow(table, url, blockedStatus) {
     var row = table.insertRow(-1);
+
+    getActiveTabUrl().then(result => {
+        if (result.includes(url)) {
+            row.classList.add("table-primary");
+        }
+    })
 
     var urlCell = row.insertCell(0);
     var statusCell = row.insertCell(1);
